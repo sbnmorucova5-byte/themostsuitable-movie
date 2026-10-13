@@ -63,17 +63,17 @@ const suallar = [
   {
     acar: "janr",
     sual: "Hansı növ filmləri sevirsən?",
-    variantlar: [["Romantik", "ro"], ["Aksiyon", "ak"], ["Komediya", "ko"], ["Dram", "dr"], ["Animasiya", "an"], ["Macəra", "ma"], ["Elmi-fantastika", "ef"], ["Triller", "tr"]]
+    variantlar: [["Romantik 💕", "ro"], ["Aksiyon 💥", "ak"], ["Komediya 😂", "ko"], ["Dram 🎭", "dr"], ["Animasiya 🧸", "an"], ["Macəra 🗺️", "ma"], ["Elmi-fantastika 🚀", "ef"], ["Triller 🔪", "tr"]]
   },
   {
     acar: "dovr",
     sual: "Hansı dövrün filmləri?",
-    variantlar: [["90-cı illər", "90"], ["2000-ci illər", "00"], ["2010-dan sonra", "10"], ["Fərq etmir", "x"]]
+    variantlar: [["90-cı illər 📼", "90"], ["2000-ci illər 💿", "00"], ["2010-dan sonra 📱", "10"], ["Fərq etmir 🎲", "x"]]
   },
   {
     acar: "uzunluq",
     sual: "Filmin uzunluğu necə olsun?",
-    variantlar: [["Qısa (110 dəqiqəyə qədər)", "q"], ["Uzun olsa da olar", "x"]]
+    variantlar: [["Qısa (110 dəqiqəyə qədər) ⏱️", "q"], ["Uzun olsa da olar 🍿", "x"]]
   },
   {
     acar: "kiminle",
@@ -81,6 +81,9 @@ const suallar = [
     variantlar: [["Tək 🧍", "t"], ["Dostlarla 👯", "d"], ["Sevdiyimlə 💞", "s"], ["Ailə ilə 👨‍👩‍👧", "a"]]
   }
 ];
+
+// Nəticədə neçə film göstərilsin (sonra 10 edəcəyik)
+const NETICE_SAYI = 4;
 
 // ===== 3) DƏYİŞƏNLƏR =====
 let cari = 0;
@@ -94,8 +97,35 @@ const geriDuymesi = document.getElementById("geri-duymesi");
 const neticeBolmesi = document.getElementById("netice-bolmesi");
 const filmlerQutusu = document.getElementById("filmler");
 const yenidenDuymesi = document.getElementById("yeniden-duymesi");
+const zolaqDolu = document.getElementById("zolaq-dolu");
+const novbeYazi = document.getElementById("novbe-yazi");
+const stikerlerQutusu = document.getElementById("stikerler");
 
-// ===== 5) SUALI GÖSTƏR =====
+// ===== 5) ARXA FON STİKERLƏRİ =====
+const stikerEmojileri = ["🍿", "🎬", "🕶️", "🎟️", "🎥", "⭐", "📽️", "🥤", "🎞️", "🍫", "👓", "🎭"];
+const stikerRengleri = ["#ff2bd6", "#22e6ff", "#9a6bff", "#ffe14d"];
+
+function stikerYarat() {
+  const say = window.innerWidth < 600 ? 14 : 24;
+
+  for (let i = 0; i < say; i++) {
+    const s = document.createElement("span");
+    s.className = "stiker";
+    s.textContent = stikerEmojileri[i % stikerEmojileri.length];
+
+    s.style.setProperty("--x", Math.random() * 94 + "%");
+    s.style.setProperty("--y", Math.random() * 92 + "%");
+    s.style.setProperty("--olcu", 22 + Math.random() * 30 + "px");
+    s.style.setProperty("--muddet", 4 + Math.random() * 5 + "s");
+    s.style.setProperty("--gecikme", -Math.random() * 6 + "s");
+    s.style.setProperty("--bucaq", 6 + Math.random() * 18 + "deg");
+    s.style.setProperty("--parilti", stikerRengleri[i % stikerRengleri.length]);
+
+    stikerlerQutusu.appendChild(s);
+  }
+}
+
+// ===== 6) SUALI GÖSTƏR =====
 function sualGoster() {
   if (cari >= suallar.length) {
     neticeGoster();
@@ -106,11 +136,16 @@ function sualGoster() {
   sualBasligi.textContent = sual.sual;
   variantlarQutusu.innerHTML = "";
 
+  // İrəliləyiş zolağı
+  novbeYazi.textContent = (cari + 1) + " / " + suallar.length;
+  zolaqDolu.style.width = ((cari + 1) / suallar.length) * 100 + "%";
+
   sual.variantlar.forEach(function (variant) {
     const yazi = variant[0];
     const kod = variant[1];
 
     const duyme = document.createElement("button");
+    duyme.className = "variant";
     duyme.textContent = yazi;
 
     duyme.addEventListener("click", function () {
@@ -125,7 +160,7 @@ function sualGoster() {
   geriDuymesi.style.display = cari > 0 ? "inline-block" : "none";
 }
 
-// ===== 6) XAL HESABLAMA =====
+// ===== 7) XAL HESABLAMA =====
 function xalHesabla(film) {
   let xal = 0;
   const sebebler = [];
@@ -174,7 +209,7 @@ function xalHesabla(film) {
   return { film: film, xal: xal, sebebler: sebebler };
 }
 
-// ===== 7) NƏTİCƏNİ GÖSTƏR =====
+// ===== 8) NƏTİCƏNİ GÖSTƏR =====
 function neticeGoster() {
   sualBolmesi.classList.add("gizli");
   neticeBolmesi.classList.remove("gizli");
@@ -183,24 +218,29 @@ function neticeGoster() {
   const siralanmis = filmler
     .map(xalHesabla)
     .sort(function (a, b) { return b.xal - a.xal; })
-    .slice(0, 4);
+    .slice(0, NETICE_SAYI);
 
-  siralanmis.forEach(function (n) {
+  siralanmis.forEach(function (n, index) {
     const kart = document.createElement("div");
     kart.className = "film-kart";
+    kart.style.setProperty("--sira", index); // kartlar ardıcıl gəlsin
 
     const janrlar = n.film.g.map(function (k) { return janrAdlari[k]; }).join(", ");
+    const sebeb = n.sebebler.length ? n.sebebler.join(" · ") + "." : "Ümumi olaraq yaxşı seçimdir.";
 
     kart.innerHTML =
-      "<h3>" + n.film.t + "</h3>" +
-      '<div class="film-melumat">' + n.film.y + " · " + n.film.m + " dəq · " + janrlar + "</div>" +
-      '<div class="film-sebeb">' + n.sebebler.join(" · ") + ".</div>";
+      '<div class="film-nomre">' + (index + 1) + "</div>" +
+      '<div class="film-mətn">' +
+        "<h3>" + n.film.t + "</h3>" +
+        '<div class="film-melumat">' + n.film.y + " · " + n.film.m + " dəq · " + janrlar + "</div>" +
+        '<div class="film-sebeb">' + sebeb + "</div>" +
+      "</div>";
 
     filmlerQutusu.appendChild(kart);
   });
 }
 
-// ===== 8) DÜYMƏLƏR =====
+// ===== 9) DÜYMƏLƏR =====
 geriDuymesi.addEventListener("click", function () {
   cari--;
   sualGoster();
@@ -216,5 +256,6 @@ yenidenDuymesi.addEventListener("click", function () {
   sualGoster();
 });
 
-// ===== 9) BAŞLAT =====
+// ===== 10) BAŞLAT =====
+stikerYarat();
 sualGoster();

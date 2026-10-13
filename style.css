@@ -1,89 +1,359 @@
-/* Bütün elementlər üçün ümumi ayarlar */
+/* ===== RƏNGLƏR ===== */
+:root {
+  --fon-1: #060824;      /* ən tünd göy */
+  --fon-2: #0e1250;      /* bir az açıq göy */
+  --yazi: #f4f3ff;
+  --yazi-sönük: #a8abd9;
+
+  --neon-cehrayi: #ff2bd6;
+  --neon-firuze: #22e6ff;
+  --neon-benovse: #9a6bff;
+  --neon-sari: #ffe14d;
+
+  --sriftBasliq: "Fredoka", "Trebuchet MS", sans-serif;
+  --sriftMetn: "Nunito", Arial, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #0c0c16;
-  color: #f2f2f7;
-  font-family: Arial, sans-serif;
   min-height: 100vh;
+  color: var(--yazi);
+  font-family: var(--sriftMetn);
+  background: linear-gradient(160deg, var(--fon-1), var(--fon-2) 60%, #1a0f4d);
+  background-attachment: fixed;
+  overflow-x: hidden;
 }
 
-/* Başlıq: Flexbox ilə ortaya yığırıq */
+/* ===== ARXA FON PARILTILARI ===== */
+.fon-parilti {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 43, 214, 0.28), transparent 38%),
+    radial-gradient(circle at 85% 15%, rgba(34, 230, 255, 0.25), transparent 36%),
+    radial-gradient(circle at 70% 85%, rgba(154, 107, 255, 0.30), transparent 40%),
+    radial-gradient(circle at 10% 90%, rgba(255, 225, 77, 0.12), transparent 30%);
+  animation: parilti-suzme 14s ease-in-out infinite alternate;
+}
+
+@keyframes parilti-suzme {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.12) translate(-1.5%, 2%); }
+}
+
+/* ===== ÜZƏN STİKERLƏR ===== */
+#stikerler {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stiker {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  font-size: var(--olcu);
+  opacity: 0.4;
+  filter: drop-shadow(0 0 8px var(--parilti));
+  animation: uzme var(--muddet) ease-in-out var(--gecikme) infinite alternate;
+}
+
+@keyframes uzme {
+  from { transform: translateY(0) rotate(calc(var(--bucaq) * -1)); }
+  to   { transform: translateY(-26px) rotate(var(--bucaq)); }
+}
+
+/* ===== ƏSAS YERLƏŞMƏ ===== */
+header,
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
 header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px 10px;
+  padding: 44px 20px 10px;
   text-align: center;
 }
 
 main {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Əhval düymələri: Grid ilə */
-#variantlar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+/* ===== NEON BAŞLIQ ===== */
+.neon-yazi {
+  margin: 0;
+  font-family: var(--sriftBasliq);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  color: #fff;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 14px var(--neon-cehrayi),
+    0 0 30px var(--neon-cehrayi),
+    0 0 60px var(--neon-benovse);
+  animation: neon-yanma 1.6s ease-out 1;
+}
+
+/* Səhifə açılanda neon lampa kimi yanıb-sönür (yalnız bir dəfə) */
+@keyframes neon-yanma {
+  0%, 18%, 22%, 56%, 60% { opacity: 0.25; text-shadow: none; }
+  20%, 58%, 100% { opacity: 1; }
+}
+
+.alt-yazi {
+  margin: 10px 0 0;
+  color: var(--yazi-sönük);
+  font-size: 1.05rem;
+}
+
+/* ===== ŞÜŞƏ PANEL ===== */
+.panel {
+  position: relative;
+  padding: 26px 22px 24px;
+  border-radius: 26px;
+  background: rgba(14, 18, 80, 0.55);
+  backdrop-filter: blur(8px);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow:
+    0 0 0 2px rgba(34, 230, 255, 0.35),
+    0 0 28px rgba(154, 107, 255, 0.35),
+    inset 0 0 30px rgba(255, 43, 214, 0.08);
+}
+
+.panel h2 {
+  margin: 8px 0 18px;
+  font-family: var(--sriftBasliq);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+  text-align: center;
+  text-shadow: 0 0 14px rgba(34, 230, 255, 0.6);
+}
+
+/* ===== İRƏLİLƏYİŞ ZOLAĞI ===== */
+.irelileyis {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
-button {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f2f2f7;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 14px;
-  padding: 16px;
-  font-size: 1rem;
+.zolaq {
+  flex: 1;
+  height: 10px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+#zolaq-dolu {
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--neon-cehrayi), var(--neon-firuze));
+  box-shadow: 0 0 12px var(--neon-cehrayi);
+  transition: width 0.4s ease;
+}
+
+#novbe-yazi {
+  font-family: var(--sriftBasliq);
+  font-size: 0.95rem;
+  color: var(--neon-sari);
+  text-shadow: 0 0 8px rgba(255, 225, 77, 0.7);
+}
+
+/* ===== VARİANT DÜYMƏLƏRİ (stiker kimi) ===== */
+#variantlar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.variant {
+  --neon: var(--neon-cehrayi);
+  padding: 18px 14px;
+  font-family: var(--sriftBasliq);
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: var(--yazi);
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
+  border-radius: 20px;
+  border: 2px solid var(--neon);
+  background: rgba(8, 10, 50, 0.7);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--neon) 55%, transparent),
+    inset 0 0 14px color-mix(in srgb, var(--neon) 18%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-button:hover {
-  transform: translateY(-3px);
-  border-color: #7aa2ff;
+/* Hər düymənin neon rəngi fərqli olsun */
+.variant:nth-child(4n + 2) { --neon: var(--neon-firuze); }
+.variant:nth-child(4n + 3) { --neon: var(--neon-benovse); }
+.variant:nth-child(4n + 4) { --neon: var(--neon-sari); }
+
+/* Balaca əyilmə: stikerlər sanki yapışdırılıb */
+.variant:nth-child(odd)  { transform: rotate(-1deg); }
+.variant:nth-child(even) { transform: rotate(1deg); }
+
+.variant:hover,
+.variant:focus-visible {
+  transform: translateY(-5px) rotate(0deg) scale(1.04);
+  background: color-mix(in srgb, var(--neon) 22%, rgba(8, 10, 50, 0.8));
+  box-shadow:
+    0 0 22px var(--neon),
+    0 0 44px color-mix(in srgb, var(--neon) 50%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--neon) 30%, transparent);
+  outline: none;
 }
 
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #a9a9bd;
-}.gizli {
+.variant:active {
+  transform: scale(0.97);
+}
+
+/* ===== İKİNCİ DÜYMƏLƏR (Geri / Yenidən) ===== */
+.ikinci-duyme {
+  margin-top: 20px;
+  padding: 10px 18px;
+  font-family: var(--sriftBasliq);
+  font-size: 0.98rem;
+  color: var(--yazi-sönük);
+  background: transparent;
+  border: 2px dashed rgba(168, 171, 217, 0.5);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.ikinci-duyme:hover,
+.ikinci-duyme:focus-visible {
+  color: #fff;
+  border-color: var(--neon-firuze);
+  box-shadow: 0 0 14px rgba(34, 230, 255, 0.6);
+  outline: none;
+}
+
+.gizli {
   display: none;
 }
 
-#geri-duymesi,
-#yeniden-duymesi {
-  margin-top: 16px;
+/* ===== NƏTİCƏ ===== */
+.netice-giris {
+  margin: -8px 0 18px;
+  text-align: center;
+  color: var(--yazi-sönük);
 }
 
-#cavab-siyahisi {
-  line-height: 2;
-  padding-left: 20px;
-}.film-kart {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
+/* Film kartı: kino bileti kimi */
+.film-kart {
+  --neon: var(--neon-cehrayi);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 16px 18px 16px 16px;
+  border-radius: 18px;
+  background: rgba(8, 10, 50, 0.75);
+  border: 2px solid var(--neon);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--neon) 55%, transparent);
+  opacity: 0;
+  animation: bilet-gelir 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  animation-delay: calc(var(--sira) * 140ms);
+}
+
+.film-kart:nth-child(4n + 2) { --neon: var(--neon-firuze); }
+.film-kart:nth-child(4n + 3) { --neon: var(--neon-benovse); }
+.film-kart:nth-child(4n + 4) { --neon: var(--neon-sari); }
+
+/* Bilet kəsiyi: sol və sağ yarımdairələr */
+.film-kart::before,
+.film-kart::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: var(--fon-2);
+  border: 2px solid var(--neon);
+}
+.film-kart::before { left: -11px; }
+.film-kart::after  { right: -11px; }
+
+@keyframes bilet-gelir {
+  from { opacity: 0; transform: translateY(24px) rotate(-2deg) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+
+.film-nomre {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-family: var(--sriftBasliq);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #0a0a2a;
+  background: var(--neon);
+  box-shadow: 0 0 14px var(--neon);
+}
+
+.film-mətn {
+  min-width: 0;
 }
 
 .film-kart h3 {
   margin: 0 0 4px;
+  font-family: var(--sriftBasliq);
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .film-melumat {
-  color: #a9a9bd;
-  font-size: 0.85rem;
   margin-bottom: 8px;
+  color: var(--yazi-sönük);
+  font-size: 0.86rem;
 }
 
 .film-sebeb {
   font-size: 0.92rem;
-  color: #d8d8e8;
+  color: #dcdcf5;
+}
+
+/* ===== ALT YAZI ===== */
+footer {
+  padding: 30px;
+  text-align: center;
+  color: var(--yazi-sönük);
+}
+
+/* ===== TELEFON ===== */
+@media (max-width: 480px) {
+  .panel { padding: 20px 14px; }
+  .film-kart { gap: 12px; }
+}
+
+/* Hərəkəti sevməyənlər üçün animasiyaları söndür */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
